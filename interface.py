@@ -67,13 +67,30 @@ def add_photo_to_database(username, image_id, image_url):
 	db = connect()
 	curr = db.cursor()
 
+	print("check photo in db ", check_if_photo_in_db(image_id))
+	if check_if_photo_in_db(image_id):
+		print('returning...')
+		return
+
+
+
 	sql = f'''
-	INSERT INTO photos VALUES ("{image_id}", "{username}", "{image_url}", 0,0,0);
+	INSERT INTO photos VALUES ("{image_id}", "{username}", "{image_url}", 3,0,0);
 	'''
 
 	curr.execute(sql)
 	db.commit()
 
+def check_if_photo_in_db(image_id):
+	db = connect()
+	curr = db.cursor()
+
+	sql = f'''
+	SELECT photoID FROM photos WHERE photoID = "{image_id}";
+	'''
+	curr.execute(sql)
+	res = curr.fetchall()
+	return len(res) > 0
 
 
 def get_current_photo(username):
@@ -109,6 +126,50 @@ def update_current_photo(username, image_id):
 	'''
 	curr.execute(sql)
 	db.commit()
+
+
+
+
+
+#get photo queue
+def get_photo_queue(username):
+	#order users by rating - 
+	#get current photo
+	#append to list
+	#THEN 
+
+	#use list to get photo information from photos
+	#if lieks recieved < likes owed then append to list
+	#photo id photo url 
+
+	photo_queue = []
+
+	db = connect()
+	curr = db.cursor()
+
+	sql = f'''
+	SELECT photoID FROM users WHERE userID != "{username}" ORDER BY rating;
+	'''
+	curr.execute(sql)
+	res = curr.fetchall()
+	
+	for r in res:
+		sql = f'SELECT photoID, photo_url, likes_owed, likes_recieved FROM photos WHERE photoID = "{r[0]}";'
+		curr.execute(sql)
+		photo_info = curr.fetchall()
+		
+		if photo_info[0][2] > photo_info[0][3]:
+			photo_queue.append((photo_info[0][0], photo_info[0][1]))
+
+
+
+
+	return photo_queue
+
+
+
+
+
 
 
 	

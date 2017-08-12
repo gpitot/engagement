@@ -12,7 +12,7 @@
 		var url;
 		var image_url;
 		
-		$('.photo_queue').click(function()
+		$('.select_photo').click(function()
 		{
 			url = recent_photos_urls[Number($(this).attr('id').split('-')[1])];
 			image_url = recent_photos[Number($(this).attr('id').split('-')[1])];
