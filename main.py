@@ -47,6 +47,11 @@ def main():
 	if username:
 		user = insta.User(username)
 		#update photo queue
+		photo_queue = interface.get_photo_queue(username)
+
+		
+		photo_queue_html = to_html.photo_queue(photo_queue)
+
 
 		#get current photo
 		current_image = interface.get_current_photo(username)
@@ -58,7 +63,8 @@ def main():
 		return bottle.template(os.path.join('templates','index.tpl'),
 			username=username,
 			profile_picture=user.get_profile_picture(),
-			current_image_html=current_image_html
+			current_image_html=current_image_html,
+			photo_queue_html=photo_queue_html
 			)
 
 	#return home page with logged out view
@@ -83,9 +89,11 @@ def choose_new():
 
 	user = insta.User(username)
 
-	recent_photos, recent_photos_urls = user.get_recent()
+	current_image = interface.get_current_photo(username)
 
-	images_html = to_html.photo_queue(recent_photos)
+	recent_photos, recent_photos_urls = user.get_recent(current_image)
+
+	images_html = to_html.select_photo(recent_photos)
 
 	return bottle.template(os.path.join('templates','choose.tpl'),
 		username=username,

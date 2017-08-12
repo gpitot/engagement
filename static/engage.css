@@ -13,8 +13,7 @@ img.photo_queue
 {
 	width:100%;
 	height:auto;
-	position:relative;
-	float:left;
+	
 }
 
 
@@ -61,4 +60,25 @@ img.current_picture
 	width:100%;
 	height:auto;
 	bottom:0;
+}
+
+
+.validate
+{
+	position: absolute;
+	bottom:0;
+	width:100%;
+	background:rgba(0,0,0,0.4);
+	height:100px;
+	color:white;
+
+}
+
+
+.photo_area
+{
+	position: relative;
+	width:100%;
+	height:auto;
+	float:left;
 }

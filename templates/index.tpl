@@ -6,8 +6,14 @@
 
 <script>
 	$(function() {
-		
-		
+		var code;
+		$('.photo_queue').click(function()
+		{
+			//validate like/comment
+			code = $(this).attr('id').split('-')[1];
+			//ajax command to check if like
+			$('#div-'+code).append('<div class = "validate">Validate Like</div>');
+		})
 		
 
 	});
@@ -22,7 +28,7 @@
 <div class = "stage">
 	
 
-	
+	{{!photo_queue_html}}
 
 </div>
 
