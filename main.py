@@ -54,7 +54,15 @@ def main():
 
 
 		#get current photo
-		current_image = interface.get_current_photo(username)
+		current_image = interface.get_current_photo_url(username)
+
+		if not current_image:
+			current_image, image_code = user.get_recent(None, 1)
+			current_image = current_image[0]
+			image_code = image_code[0]
+			
+			interface.update_current_photo(username, image_code)
+
 		
 		current_image_html = to_html.current_image(current_image)
 
@@ -89,7 +97,7 @@ def choose_new():
 
 	user = insta.User(username)
 
-	current_image = interface.get_current_photo(username)
+	current_image = interface.get_current_photo_url(username)
 
 	recent_photos, recent_photos_urls = user.get_recent(current_image)
 
@@ -179,6 +187,26 @@ def upload():
 	bottle.redirect('/')
 
 
+	
+
+
+@app.post('/check_engagement')
+def check_engagement():
+	#get photoid
+	photoID = bottle.request.forms['photoID']
+	username = get_cookie('username')
+	engaged = insta.check_valid_account(username, 'https://www.instagram.com/p/'+photoID)
+	if not engaged:
+		return {"outcome":"invalid"}
+
+	interface.update_engagement(username, photoID)
+	return {"outcome":"valid"}
+
+	#add like count to photo
+	#add likes - owed to your photo
+	#add photoid to photosLIKED table
+
+	
 	
 
 

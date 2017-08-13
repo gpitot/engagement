@@ -13,6 +13,7 @@ def photo_queue(photos):
 		<a href = "https://www.instagram.com/p/{code}" target="_blank">
 			<img src = "{url}" class = "photo_queue" id = "code-{code}">
 		</a>
+		<div class = "validate">Validate Like</div>
 		</div>
 		'''
 

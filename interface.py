@@ -93,7 +93,7 @@ def check_if_photo_in_db(image_id):
 	return len(res) > 0
 
 
-def get_current_photo(username):
+def get_current_photo_url(username):
 	db = connect()
 	curr = db.cursor()
 
@@ -147,6 +147,13 @@ def get_photo_queue(username):
 	db = connect()
 	curr = db.cursor()
 
+
+	#get list of photos user has engaged already
+	sql = f'SELECT photoID FROM user_engagement WHERE userID = "{username}";'
+	curr.execute(sql)
+	engaged_on = [x[0] for x in curr.fetchall()]
+
+
 	sql = f'''
 	SELECT photoID FROM users WHERE userID != "{username}" ORDER BY rating;
 	'''
@@ -158,7 +165,8 @@ def get_photo_queue(username):
 		curr.execute(sql)
 		photo_info = curr.fetchall()
 		
-		if photo_info[0][2] > photo_info[0][3]:
+		
+		if photo_info[0][2] > photo_info[0][3] and photo_info[0][0] not in engaged_on:
 			photo_queue.append((photo_info[0][0], photo_info[0][1]))
 
 
@@ -172,13 +180,63 @@ def get_photo_queue(username):
 
 
 
+def update_engagement(username, photoID):
+	#update likesrecieved
+	update_likes_recieved_AND_owed(photoID, 'likes_recieved')
+	#update likes_owed
+	update_likes_recieved_AND_owed(get_photoID(username), 'likes_owed')
+	#update likes_given
+	update_likes_given(username, photoID)
+	return
+
+
+
+
+
+
+def update_likes_recieved_AND_owed(photoID, operation):
+	db = connect()
+	curr = db.cursor()
+
+	sql = f'SELECT {operation} FROM photos WHERE photoID = "{photoID}";'
+	curr.execute(sql)
+	res = curr.fetchall()
+	like_count = res[0][0]
+
+	sql = f'''
+	UPDATE photos SET {operation} = {like_count+1} WHERE photoID = "{photoID}";
+	'''
+	curr.execute(sql)
+	db.commit()
+
+
+def get_photoID(username):
+	#get current photo then update likes
+	db = connect()
+	curr = db.cursor()
+
+	sql = f'''
+	SELECT photoID FROM users WHERE userID = "{username}";
+	'''
+	curr.execute(sql)
+	res = curr.fetchall()
 	
 
+	return res[0][0]
 
 
-
-
+def update_likes_given(username, photoID):
+	#in new table
+	#update likes given
+	db = connect()
+	curr = db.cursor()
+	sql = f'''
+	INSERT INTO user_engagement VALUES ("{username}", "{photoID}");
+	'''
+	curr.execute(sql)
+	db.commit()
 
 	
+
 
 

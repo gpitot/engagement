@@ -96,9 +96,9 @@ class User:
 		return self.profile_picture
 
 
-	def get_recent(self, current_image=None):
-		self.recent_photos = [node["thumbnail_src"] for node in self.page_json["user"]["media"]["nodes"][:4]]
-		self.recent_photos_urls = [node["code"] for node in self.page_json["user"]["media"]["nodes"][:4]]
+	def get_recent(self, current_image=None, count=4):
+		self.recent_photos = [node["thumbnail_src"] for node in self.page_json["user"]["media"]["nodes"][:count]]
+		self.recent_photos_codes = [node["code"] for node in self.page_json["user"]["media"]["nodes"][:count]]
 
 		if current_image:
 			image_index = -1
@@ -107,8 +107,8 @@ class User:
 					image_index = i
 
 			self.recent_photos.pop(image_index)
-			self.recent_photos_urls.pop(image_index)
+			self.recent_photos_codes.pop(image_index)
 
 
 
-		return self.recent_photos, self.recent_photos_urls
+		return self.recent_photos, self.recent_photos_codes

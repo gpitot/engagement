@@ -44,6 +44,21 @@ def add_photo_table():
 	c.executescript(sql)
 	conn.commit()
 
+
+
+def add_user_engagement_table():
+	sql = '''
+	DROP TABLE IF EXISTS user_engagement;
+	CREATE TABLE user_engagement (
+	           userID text,
+	           photoID text
+	           
+	);'''
+
+	c.executescript(sql)
+	conn.commit()
+
+
 def insert_dummy_data():
 	sql = '''
 	INSERT INTO photos VALUES ('photo1','user1',  0,0,0);
@@ -53,10 +68,13 @@ def insert_dummy_data():
 
 
 
-add_user_table()
+#add_user_table()
+#add_photo_table()
+#add_user_engagement_table()
+
 #insert_dummy_data()
 
-add_photo_table()
+
 
 
 

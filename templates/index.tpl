@@ -7,16 +7,57 @@
 <script>
 	$(function() {
 		var code;
+		var last_valid = '';
 		$('.photo_queue').click(function()
 		{
 			//validate like/comment
 			code = $(this).attr('id').split('-')[1];
 			//ajax command to check if like
-			$('#div-'+code).append('<div class = "validate">Validate Like</div>');
+			
+			//only one valid class at a time
+			last_valid = add_valid_button(code, last_valid)
+			
+		})
+
+		$('.photo_area').on('click', '.validate', function()
+		{
+			console.log("validate clicked");
+			$.ajax({
+	            data:{'photoID':code},
+	            url: "/check_engagement",
+	            type: "POST",
+	            contentType: 'application/json',
+	            success: function (data) {
+	                console.log("success");
+	                console.log(data);
+
+	                if (data["outcome"] == "valid")
+	                {
+	                	$('#div-'+code).hide();
+	                }
+	                
+	            }
+        	});
+
 		})
 		
 
 	});
+
+
+	function add_valid_button(code, last_valid)
+	{
+		
+		$('div#div-'+code+' > div.validate').show();
+
+
+		
+		$('div#div-'+last_valid+' > div.validate').hide();
+		
+
+		return code
+		
+	}
 
 
 </script>

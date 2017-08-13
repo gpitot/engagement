@@ -71,6 +71,8 @@ img.current_picture
 	background:rgba(0,0,0,0.4);
 	height:100px;
 	color:white;
+	cursor:pointer;
+	display:none;
 
 }
 
